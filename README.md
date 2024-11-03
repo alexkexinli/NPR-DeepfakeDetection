@@ -62,71 +62,73 @@ chmod 777 ./download_dataset.sh
 <summary> Click to expand the folder tree structure. </summary>
 
 ```
-datasets
-|-- ForenSynths_train_val
-|   |-- train
-|   |   |-- car
-|   |   |-- cat
-|   |   |-- chair
-|   |   `-- horse
-|   `-- val
-|   |   |-- car
-|   |   |-- cat
-|   |   |-- chair
-|   |   `-- horse
-|   |-- test
-|       |-- biggan
-|       |-- cyclegan
-|       |-- deepfake
-|       |-- gaugan
-|       |-- progan
-|       |-- stargan
-|       |-- stylegan
-|       `-- stylegan2
-`-- Generalization_Test
-    |-- ForenSynths_test       # Table1
-    |   |-- biggan
-    |   |-- cyclegan
-    |   |-- deepfake
-    |   |-- gaugan
-    |   |-- progan
-    |   |-- stargan
-    |   |-- stylegan
-    |   `-- stylegan2
-    |-- GANGen-Detection     # Table2
-    |   |-- AttGAN
-    |   |-- BEGAN
-    |   |-- CramerGAN
-    |   |-- InfoMaxGAN
-    |   |-- MMDGAN
-    |   |-- RelGAN
-    |   |-- S3GAN
-    |   |-- SNGAN
-    |   `-- STGAN
-    |-- DiffusionForensics  # Table3
-    |   |-- adm
-    |   |-- ddpm
-    |   |-- iddpm
-    |   |-- ldm
-    |   |-- pndm
-    |   |-- sdv1_new
-    |   |-- sdv2
-    |   `-- vqdiffusion
-    `-- UniversalFakeDetect # Table4
-    |   |-- dalle
-    |   |-- glide_100_10
-    |   |-- glide_100_27
-    |   |-- glide_50_27
-    |   |-- guided          # Also known as ADM.
-    |   |-- ldm_100
-    |   |-- ldm_200
-    |   `-- ldm_200_cfg
-    |-- Diffusion1kStep     # Table5
-        |-- DALLE
-        |-- ddpm
-        |-- guided-diffusion    # Also known as ADM.
-        |-- improved-diffusion  # Also known as IDDPM.
-        `-- midjourney
+├── dataset
+│ ├── AIGCDetect_testset
+│ │ ├── AIGCDetect_testset
+│ │   └── test
+│ │ 
+│ ├── ForenSynths_train_val
+│ │ ├── test
+│ │ │ ├── biggan
+│ │ │ ├── cyclegan
+│ │ │ ├── deepfake
+│ │ │ ├── gaugan
+│ │ │ ├── progan
+│ │ │ ├── stargan
+│ │ │ ├── stylegan
+│ │ │ └── stylegan2
+│ │ ├── train
+│ │ │ ├── car
+│ │ │ ├── cat
+│ │ │ ├── chair
+│ │ │ └── horse
+│ │ └── val
+│ │     ├── car
+│ │     ├── cat
+│ │     ├── chair
+│ │     └── horse
+│ └── Generalization_Test
+│     ├── Diffusion1kStep
+│     │ ├── DALLE
+│     │ ├── ddpm
+│     │ ├── guided-diffusion
+│     │ ├── improved-diffusion
+│     │ └── midjourney
+│     ├── DiffusionForensics
+│     │ ├── adm
+│     │ ├── dalle2
+│     │ ├── ddpm
+│     │ ├── diff-projectedgan
+│     │ ├── diff-stylegan
+│     │ ├── iddpm
+│     │ ├── if
+│     │ ├── ldm
+│     │ ├── midjourney
+│     │ ├── pndm
+│     │ ├── projectedgan
+│     │ ├── sdv1
+│     │ ├── sdv2
+│     │ ├── stylegan_official
+│     │ └── vqdiffusion
+│     ├── GANGen-Detection
+│     │ ├── AttGAN
+│     │ ├── BEGAN
+│     │ ├── CramerGAN
+│     │ ├── InfoMaxGAN
+│     │ ├── MMDGAN
+│     │ ├── RelGAN
+│     │ ├── S3GAN
+│     │ ├── SNGAN
+│     │ └── STGAN
+│     └── UniversalFakeDetect
+│         ├── dalle
+│         ├── glide_100_10
+│         ├── glide_100_27
+│         ├── glide_50_27
+│         ├── guided
+│         ├── ldm_100
+│         ├── ldm_200
+│         └── ldm_200_cfg
 
 
 ```
@@ -134,13 +136,13 @@ datasets
 
 ## Training the model 
 ```sh
-CUDA_VISIBLE_DEVICES=0 ./pytorch18/bin/python train.py --name 4class-resnet-car-cat-chair-horse --dataroot ./datasets/ForenSynths_train_val --classes car,cat,chair,horse --batch_size 32 --delr_freq 10 --lr 0.0002 --niter 50
+CUDA_VISIBLE_DEVICES=0 ./venv/bin/python train.py --name 4class-resnet-car-cat-chair-horse --dataroot ./dataset/ForenSynths_train_val --classes car,cat,chair,horse --batch_size 2 --delr_freq 10 --lr 0.0002 --niter 50
 ```
 
 ## Testing the detector
 Modify the dataroot in test.py.
 ```sh
-CUDA_VISIBLE_DEVICES=0 ./pytorch18/bin/python test.py --model_path ./NPR.pth  --batch_size {BS}
+CUDA_VISIBLE_DEVICES=0 ./venv/bin/python test.py --model_path ./NPR.pth  --batch_size 2
 ```
 
 ## Detection Results
