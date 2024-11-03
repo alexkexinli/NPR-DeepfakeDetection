@@ -4,7 +4,7 @@ echo pwd: $pwd
 
 # pip install gdown==4.7.1 
 
-mkdir dataset
+mkdir -p dataset
 cd dataset
 
 # --proxy http://ip:port
@@ -14,6 +14,7 @@ cd dataset
 # https://github.com/Yuheng-Li/UniversalFakeDetect
 # https://drive.google.com/drive/folders/1nkCXClC7kFM01_fqmLrVNtnOYEFPtWO-
 gdown https://drive.google.com/drive/folders/1nkCXClC7kFM01_fqmLrVNtnOYEFPtWO- -O ./UniversalFakeDetect --folder
+mkdir -p UniversalFakeDetect
 cd ./UniversalFakeDetect
 ls | xargs -I pa sh -c "tar -zxvf pa; rm pa"
 cd $pwd/dataset
@@ -21,7 +22,7 @@ cd $pwd/dataset
 # https://github.com/chuangchuangtan/FreqNet-DeepfakeDetection
 # https://drive.google.com/drive/folders/11E0Knf9J1qlv2UuTnJSOFUjIIi90czSj?usp=sharing
 gdown https://drive.google.com/drive/folders/11E0Knf9J1qlv2UuTnJSOFUjIIi90czSj -O ./GANGen-Detection --folder
-
+mkdir -p GANGen-Detection
 cd ./GANGen-Detection
 ls | xargs -I pa sh -c "tar -zxvf pa; rm pa"
 cd $pwd/dataset
@@ -29,7 +30,7 @@ cd $pwd/dataset
 # https://github.com/ZhendongWang6/DIRE
 # https://drive.google.com/drive/folders/1tKsOU-6FDdstrrKLPYuZ7RpQwtOSHxUD?usp=sharing
 gdown https://drive.google.com/drive/folders/1tKsOU-6FDdstrrKLPYuZ7RpQwtOSHxUD -O ./DiffusionForensics --folder
-
+mkdir -p DiffusionForensics
 cd ./DiffusionForensics
 ls | xargs -I pa sh -c "tar -zxvf pa; rm pa"
 cd $pwd/dataset
@@ -42,12 +43,13 @@ unzip test_full.zip -d ./AIGCDetect_testset
 cd $pwd/dataset
 
 gdown https://drive.google.com/drive/folders/14f0vApTLiukiPvIHukHDzLujrvJpDpRq -O ./Diffusion1kStep --folder
+mkdir -p Diffusion1kStep
 cd ./Diffusion1kStep
 ls | xargs -I pa sh -c "tar -zxvf pa; rm pa"
 cd $pwd/dataset
 
 
 # https://github.com/peterwang512/CNNDetection
-gdown 'https://drive.google.com/u/0/uc?id=1z_fD3UKgWQyOTZIBbYSaQ-hz4AzUrLC1' -O CNN_synth_testset.zip   --continue
+wget 'https://huggingface.co/datasets/sywang/CNNDetection/resolve/main/CNN_synth_testset.zip' -O CNN_synth_testset.zip   --continue
 tar -zxvf CNN_synth_testset.zip -C ./ForenSynths
 

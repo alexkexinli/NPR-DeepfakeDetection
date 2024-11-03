@@ -23,22 +23,22 @@ def seed_torch(seed=1029):
     torch.backends.cudnn.enabled = False
 seed_torch(100)
 DetectionTests = {
-                'ForenSynths': { 'dataroot'   : '/opt/data/private/DeepfakeDetection/ForenSynths/',
+           #      'ForenSynths': { 'dataroot'   : '/mnt/d/codes/NPR-DeepfakeDetection/ForenSynths/',
+           #                       'no_resize'  : False, # Due to the different shapes of images in the dataset, resizing is required during batch detection.
+           #                       'no_crop'    : True,
+           #                     },
+           #
+           # 'GANGen-Detection': { 'dataroot'   : '/mnt/d/codes/NPR-DeepfakeDetection/GANGen-Detection/',
+           #                       'no_resize'  : True,
+           #                       'no_crop'    : True,
+           #                     },
+
+         'DiffusionForensics': { 'dataroot'   : '/mnt/d/codes/NPR-DeepfakeDetection/dataset/Generalization_Test/DiffusionForensics',
                                  'no_resize'  : False, # Due to the different shapes of images in the dataset, resizing is required during batch detection.
                                  'no_crop'    : True,
                                },
 
-           'GANGen-Detection': { 'dataroot'   : '/opt/data/private/DeepfakeDetection/GANGen-Detection/',
-                                 'no_resize'  : True,
-                                 'no_crop'    : True,
-                               },
-
-         'DiffusionForensics': { 'dataroot'   : '/opt/data/private/DeepfakeDetection/DiffusionForensics/',
-                                 'no_resize'  : False, # Due to the different shapes of images in the dataset, resizing is required during batch detection.
-                                 'no_crop'    : True,
-                               },
-
-        'UniversalFakeDetect': { 'dataroot'   : '/opt/data/private/DeepfakeDetection/UniversalFakeDetect/',
+        'UniversalFakeDetect': { 'dataroot'   : '/mnt/d/codes/NPR-DeepfakeDetection/dataset/Generalization_Test/UniversalFakeDetect',
                                  'no_resize'  : False, # Due to the different shapes of images in the dataset, resizing is required during batch detection.
                                  'no_crop'    : True,
                                },
@@ -62,7 +62,8 @@ for testSet in DetectionTests.keys():
     accs = [];aps = []
     print(time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime()))
     for v_id, val in enumerate(os.listdir(dataroot)):
-        opt.dataroot = '{}/{}'.format(dataroot, val)
+        opt.dataroot = '{}/{}/'.format(dataroot, val)
+        print(opt.dataroot)
         opt.classes  = '' #os.listdir(opt.dataroot) if multiclass[v_id] else ['']
         opt.no_resize = DetectionTests[testSet]['no_resize']
         opt.no_crop   = DetectionTests[testSet]['no_crop']
