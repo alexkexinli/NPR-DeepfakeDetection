@@ -10,21 +10,9 @@ import torchvision.transforms as transforms
 from PIL import Image
 
 def predict(model, imgs):
-    if opt.isTrain:
-        crop_func = transforms.RandomCrop(opt.cropSize)
-    elif opt.no_crop:
-        crop_func = transforms.Lambda(lambda img: img)
-    else:
-        crop_func = transforms.CenterCrop(opt.cropSize)
-
-    if opt.isTrain and not opt.no_flip:
-        flip_func = transforms.RandomHorizontalFlip()
-    else:
-        flip_func = transforms.Lambda(lambda img: img)
-    if not opt.isTrain and opt.no_resize:
-        rz_func = transforms.Lambda(lambda img: img)
-    else:
-        rz_func = transforms.Resize((opt.loadSize, opt.loadSize))
+    crop_func = transforms.Lambda(lambda img: img)
+    flip_func = transforms.Lambda(lambda img: img)
+    rz_func = transforms.Resize((opt.loadSize, opt.loadSize))
     covert_tensor = transforms.Compose([
         rz_func,
         crop_func,
@@ -32,12 +20,10 @@ def predict(model, imgs):
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
-    tens = covert_tensor(imgs[0])
-    tens = tens.cuda()
-    data_loader = create_dataloader(opt)
+    imgs = [covert_tensor(img) for img in imgs]
     with torch.no_grad():
         y_pred = []
-        for img, _ in data_loader:
+        for img in imgs:
             print(type(img),"img")
             in_tens = img.cuda()
             y_pred.extend(model(in_tens).sigmoid().flatten().tolist())
