@@ -1,9 +1,52 @@
 import torch
 import numpy as np
+from torch.ao.quantization.fx import convert
+
 from networks.resnet import resnet50
 from sklearn.metrics import average_precision_score, precision_recall_curve, accuracy_score
 from options.test_options import TestOptions
 from data import create_dataloader
+import torchvision.transforms as transforms
+from PIL import Image
+
+def predict(model, imgs):
+    if opt.isTrain:
+        crop_func = transforms.RandomCrop(opt.cropSize)
+    elif opt.no_crop:
+        crop_func = transforms.Lambda(lambda img: img)
+    else:
+        crop_func = transforms.CenterCrop(opt.cropSize)
+
+    if opt.isTrain and not opt.no_flip:
+        flip_func = transforms.RandomHorizontalFlip()
+    else:
+        flip_func = transforms.Lambda(lambda img: img)
+    if not opt.isTrain and opt.no_resize:
+        rz_func = transforms.Lambda(lambda img: img)
+    else:
+        rz_func = transforms.Resize((opt.loadSize, opt.loadSize))
+    covert_tensor = transforms.Compose([
+        rz_func,
+        crop_func,
+        flip_func,
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ])
+    tens = covert_tensor(imgs[0])
+    tens = tens.cuda()
+    data_loader = create_dataloader(opt)
+    with torch.no_grad():
+        y_pred = []
+        for img, _ in data_loader:
+            print(type(img),"img")
+            in_tens = img.cuda()
+            y_pred.extend(model(in_tens).sigmoid().flatten().tolist())
+
+    realcounter = 0
+    for pred in y_pred:
+        if pred <=0.5:
+            realcounter+=1
+    return realcounter >=8
 
 
 def validate(model, opt):
@@ -17,6 +60,8 @@ def validate(model, opt):
             y_true.extend(label.flatten().tolist())
 
     y_true, y_pred = np.array(y_true), np.array(y_pred)
+    print(y_pred.shape,"y_pred",y_pred)
+    print(y_true.shape, "y_true",y_true)
     r_acc = accuracy_score(y_true[y_true==0], y_pred[y_true==0] > 0.5)
     f_acc = accuracy_score(y_true[y_true==1], y_pred[y_true==1] > 0.5)
     acc = accuracy_score(y_true, y_pred > 0.5)

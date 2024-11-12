@@ -4,7 +4,7 @@ import os
 import csv
 import torch
 from util import Logger, printSet
-from validate import validate
+from validate import validate, predict
 from networks.resnet import resnet50
 from options.test_options import TestOptions
 import networks.resnet as resnet
@@ -33,15 +33,15 @@ DetectionTests = {
            #                       'no_crop'    : True,
            #                     },
 
-         'DiffusionForensics': { 'dataroot'   : '/mnt/d/codes/NPR-DeepfakeDetection/dataset/Generalization_Test/DiffusionForensics',
+         'tentest': { 'dataroot'   : '/mnt/e/PeopleFaceToTrain/test/testtest',
                                  'no_resize'  : False, # Due to the different shapes of images in the dataset, resizing is required during batch detection.
-                                 'no_crop'    : True,
+                                 'no_crop'    : False,
                                },
 
-        'UniversalFakeDetect': { 'dataroot'   : '/mnt/d/codes/NPR-DeepfakeDetection/dataset/Generalization_Test/UniversalFakeDetect',
-                                 'no_resize'  : False, # Due to the different shapes of images in the dataset, resizing is required during batch detection.
-                                 'no_crop'    : True,
-                               },
+        # 'UniversalFakeDetect': { 'dataroot'   : '/mnt/d/codes/NPR-DeepfakeDetection/dataset/Generalization_Test/UniversalFakeDetect',
+        #                          'no_resize'  : False, # Due to the different shapes of images in the dataset, resizing is required during batch detection.
+        #                          'no_crop'    : True,
+        #                        },
 
                  }
 
@@ -67,6 +67,8 @@ for testSet in DetectionTests.keys():
         opt.classes  = '' #os.listdir(opt.dataroot) if multiclass[v_id] else ['']
         opt.no_resize = DetectionTests[testSet]['no_resize']
         opt.no_crop   = DetectionTests[testSet]['no_crop']
+        resp = predict(model,opt)
+        print(resp)
         acc, ap, _, _, _, _ = validate(model, opt)
         accs.append(acc);aps.append(ap)
         print("({} {:12}) acc: {:.1f}; ap: {:.1f}".format(v_id, val, acc*100, ap*100))

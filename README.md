@@ -136,7 +136,7 @@ chmod 777 ./download_dataset.sh
 
 ## Training the model 
 ```sh
-CUDA_VISIBLE_DEVICES=0 ./venv/bin/python train.py --name 4class-resnet-car-cat-chair-horse --dataroot ./dataset/ForenSynths_train_val --classes car,cat,chair,horse --batch_size 2 --delr_freq 10 --lr 0.0002 --niter 50
+CUDA_VISIBLE_DEVICES=0 ./venv/bin/python train.py --name one-class-people  --dataroot /mnt/e/PeopleFaceToTrain --classes people --batch_size 2 --delr_freq 10 --lr 0.0002 --niter 50
 ```
 
 ## Testing the detector
